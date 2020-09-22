@@ -16,12 +16,13 @@ limitations under the License.
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/Support/Casting.h"
 #include "mlir-hlo/Dialect/mhlo/IR/hlo_ops.h"
+#include "mlir-hlo/Dialect/mhlo/transforms/PassDetail.h"
+#include "mlir/Dialect/StandardOps/IR/Ops.h"
 #include "mlir/IR/Operation.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Pass/PassManager.h"
 #include "mlir/Support/LLVM.h"
 #include "mlir/Transforms/RegionUtils.h"
-#include "mlir/Dialect/StandardOps/IR/Ops.h"  // from @llvm-project
 
 namespace mlir {
 namespace mhlo {
@@ -39,7 +40,8 @@ namespace {
 // those within internally. Note that doing so is the only option in case of
 // values defined outside that are BlockArguments of any of the parent region.
 class SinkConstantsToControlFlowPass
-    : public mlir::PassWrapper<SinkConstantsToControlFlowPass, FunctionPass> {
+    : public SinkConstantsToControlFlowPassBase<
+          SinkConstantsToControlFlowPass> {
   void runOnFunction() override {
     getFunction().walk([](Operation* op) {
       if (auto while_op = llvm::dyn_cast<WhileOp>(op)) {

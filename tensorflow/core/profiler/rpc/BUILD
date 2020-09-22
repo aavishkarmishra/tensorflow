@@ -1,9 +1,30 @@
+load("//tensorflow/core/platform:rules_cc.bzl", "cc_library")
 load("//tensorflow:tensorflow.bzl", "tf_external_workspace_visible")  # buildifier: disable=same-origin-load
 load("//tensorflow:tensorflow.bzl", "tf_grpc_cc_dependency")  # buildifier: disable=same-origin-load
 load("//tensorflow:tensorflow.bzl", "tf_pybind_cc_library_wrapper")  # buildifier: disable=same-origin-load
+load("//tensorflow/core/profiler/builds:build_config.bzl", "tf_profiler_alias")
 
 package(
+    default_visibility = [
+        "//tensorflow/core/profiler:internal",
+    ],
     licenses = ["notice"],  # Apache 2.0
+)
+
+cc_library(
+    name = "grpc",
+    hdrs = ["grpc.h"],
+    deps = [
+        tf_profiler_alias("//tensorflow/core/profiler/rpc/", "grpc"),
+        tf_grpc_cc_dependency(),
+    ],
+)
+
+exports_files(
+    [
+        "grpc.h",
+    ],
+    visibility = ["//tensorflow/core/profiler/rpc:__subpackages__"],
 )
 
 cc_library(
@@ -13,6 +34,7 @@ cc_library(
     features = ["-layering_check"],
     visibility = tf_external_workspace_visible(
         [
+            "//tensorflow/core/data/service:__pkg__",
             "//tensorflow/core/distributed_runtime/rpc:__pkg__",
             "//tensorflow_serving/model_servers:__pkg__",
         ],

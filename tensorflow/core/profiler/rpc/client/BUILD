@@ -1,3 +1,4 @@
+load("//tensorflow/core/platform:rules_cc.bzl", "cc_library")
 load("//tensorflow:tensorflow.bzl", "tf_grpc_cc_dependency")
 load("//tensorflow:tensorflow.bzl", "tf_pybind_cc_library_wrapper")  # buildifier: disable=same-origin-load
 
@@ -26,6 +27,8 @@ cc_library(
         "//tensorflow/core/profiler:profiler_options_proto_cc",
         "//tensorflow/core/profiler:profiler_service_proto_cc",
         "//tensorflow/core/profiler/convert:xplane_to_profile_response",
+        "//tensorflow/core/profiler/protobuf:xplane_proto_cc",
+        "//tensorflow/core:lib_internal",
     ] + tf_profiler_client_deps(),
 )
 
@@ -39,6 +42,7 @@ cc_library(
         "//tensorflow/core:lib",
         "//tensorflow/core:lib_internal",
         "//tensorflow/core/profiler:profiler_service_proto_cc",
+        "//tensorflow/core/profiler/utils:file_system_utils",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/time",
     ],
